@@ -11,7 +11,7 @@ import Loader from '../../components/UI/loader/Loader'
 
 interface IProps {
     selectGallery: (selector: string, title: string) => void,
-    setLoaded: (arr: any) => void,
+    setLoaded: (arr: IMGInterface) => void,
     loaded: [],
     reload: boolean,
     cancelReload: () => void
@@ -27,7 +27,7 @@ const GalleryList: React.FC<IProps> = ({ selectGallery, setLoaded, loaded, reloa
     const [galleryImgs, setGalleryImgs] = useState<any>([])
     const [paginatedArray, setPaginatedArray] = useState([])
     const [page, setPage] = useState<number|null>(null)
-    const [paginatedPage, setPaginatedPage] = useState<any[]>([])
+    const [paginatedPage, setPaginatedPage] = useState<IMGInterface[]>([])
 
 
 
@@ -94,7 +94,7 @@ const GalleryList: React.FC<IProps> = ({ selectGallery, setLoaded, loaded, reloa
     const setGalleries = async() => {
       const res = await apiClient('/gallery')
       let galleries = res.data.galleries
-      const imgsPaths = galleries.filter((p: any) => p.image) 
+      const imgsPaths = galleries.filter((p: { image: {}}) => p.image) 
       filterImgs(imgsPaths)
       setImgs(res.data.galleries) 
   } 
@@ -108,7 +108,7 @@ const GalleryList: React.FC<IProps> = ({ selectGallery, setLoaded, loaded, reloa
   // vyfiltruj galerie s image property
   const filterImgs = async(paths: []) => {
       const unfiltered = await Promise.allSettled(
-        paths.map(async(p: any) => {
+        paths.map(async(p: { image: { fullpath: string }}) => {
           const path = p.image.fullpath 
             const image = await Promise.allSettled([
               await axios({
@@ -135,12 +135,13 @@ const GalleryList: React.FC<IProps> = ({ selectGallery, setLoaded, loaded, reloa
 
 
   // prirad img property do vyfiltrovaneho pola
-  const addPicsToGalleries = (arrOfPics: any, filteredPics: any) => {
+  const addPicsToGalleries = (arrOfPics: IMGInterface[], filteredPics: { value: { path: string, image: {} }}[]) => {
     const newArray: any = []
 
-     for(let i = 0; i < arrOfPics.length - 1; i++) {
+
+      for(let i = 0; i < arrOfPics.length - 1; i++) {
         for(let n = 0; n < filteredPics.length - 1; n++) {
-          if(arrOfPics[i].image && arrOfPics[i].image.fullpath === filteredPics[n].value.path) {
+          if(arrOfPics[i].image && arrOfPics[i].image?.fullpath === filteredPics[n].value.path) {
             newArray.push({
               ...arrOfPics[i],
               img: filteredPics[n].value.image
@@ -157,7 +158,7 @@ const GalleryList: React.FC<IProps> = ({ selectGallery, setLoaded, loaded, reloa
     }
 
     // urob paginaciu
-    const paginate = (arr: any) => {
+    const paginate = (arr: IMGInterface[]) => {
         let paginated: any = []
 
       for(let i = 0; i < arr.length; i) {
@@ -172,9 +173,9 @@ const GalleryList: React.FC<IProps> = ({ selectGallery, setLoaded, loaded, reloa
     }
 
   // vyfiltruj duplikaty z pola
-  const filterArray = (arr: any) => {
-    let filteredArr = arr.reduce((acc: any, current: any) => {
-      const x = acc.find((item: any) => item.name === current.name);
+  const filterArray = (arr: IMGInterface[]) => {
+    let filteredArr = arr.reduce((acc: any[], current: { name: string }) => {
+      const x = acc.find((item: { name: string}) => item.name === current.name);
       if (!x) {
         return acc.concat([current]);
       } else {
@@ -185,18 +186,20 @@ const GalleryList: React.FC<IProps> = ({ selectGallery, setLoaded, loaded, reloa
 
 
     // zorad podla toho ci ma galeria img a podla prop modified
-    filteredArr.forEach((i: any) => {
+    filteredArr.forEach((i: IMGInterface) => {
       if(i.image) {
         const galleryWithImage = i
-        const index = filteredArr.findIndex((el:any) => el.path === i.path)
+        const index = filteredArr.findIndex((el: { path: string}) => el.path === i.path)
         const item = filteredArr.splice(index, 1)
         filteredArr.unshift(item[0])
       }
     })
 
-    filteredArr.sort((a: any,b: any) => {
+    filteredArr.sort((a: { image: { modified: string}} ,b: { image: { modified: string}} ) => {
       if(a.image && b.image) {
-        return new Date(b.image.modified).valueOf() - new Date(a.image.modified).valueOf()
+        return new Date(b.image.modified).valueOf() - new Date(a.image.modified).valueOf() 
+      } else {
+        return 0
       }
     })
     return filteredArr
@@ -224,7 +227,7 @@ const GalleryList: React.FC<IProps> = ({ selectGallery, setLoaded, loaded, reloa
                                 (
                                     <GallerySelector 
                                     isGallery={true}
-                                    key={i.name} 
+                                    key={idx} 
                                     image={i.img} 
                                     header={i.name} 
                                     link={i.path} 
