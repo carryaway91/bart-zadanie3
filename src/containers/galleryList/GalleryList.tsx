@@ -23,9 +23,9 @@ interface IMGInterface {path: string, image?: {path: string, fullpath: string, n
 const GalleryList: React.FC<IProps> = ({ selectGallery, setLoaded, loaded, reload, cancelReload }) => {
 
     const [imgs, setImgs] = useState<IMGInterface[]>([])
-    const [showSelection, setShowSelection] = useState(false)
+    const [showSelection, setShowSelection] = useState<boolean>(false)
     const [galleryImgs, setGalleryImgs] = useState<any>([])
-    const [paginatedArray, setPaginatedArray] = useState([])
+    const [paginatedArray, setPaginatedArray] = useState<[]>([])
     const [page, setPage] = useState<number|null>(null)
     const [paginatedPage, setPaginatedPage] = useState<IMGInterface[]>([])
 

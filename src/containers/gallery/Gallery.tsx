@@ -25,14 +25,14 @@ interface IProps {
 
 const Gallery: React.FC<IProps> = ({ setHeader, setReload }) => {
     const [imgs, setImgs] = useState<any>(null)
-    const [displayedImg, setDisplayedImg] = useState('')
+    const [displayedImg, setDisplayedImg] = useState<string>('')
     const [imgIdx, setImgIdx] = useState<number>(0)
     const [picActive, setPicActive] = useState<boolean>(false)
     const [noImgs, setNoImgs] = useState<boolean>(false)
     const [filteredImgs, setFilteredImgs] = useState<any>([])
     const [redNotFound, setRedNotFound] = useState<boolean>(false)
     const [redBack, setRedBack] = useState<boolean>(false)
-    const [upload, setUpload] = useState(false)
+    const [upload, setUpload] = useState<boolean>(false)
 
     const {showOverlay, closeOverlay } = useContext(GalleryContext)
     const { setNotMessage } = useContext(NotificationContext)

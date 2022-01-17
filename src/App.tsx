@@ -15,8 +15,8 @@ function App() {
 
   const [selectedGallery, setSelecteGallery] = useState()
   const [overlay, setOverlay] = useState(false)
-  const [header, setHeader] = useState('')
-  const [notification, setNotification] = useState('')
+  const [header, setHeader] = useState<string>('')
+  const [notification, setNotification] = useState<string>('')
   const [loadedGalleries, setLoadedGalleries] = useState<any>([])
   const [reload, setReload] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
