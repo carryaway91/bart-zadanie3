@@ -47,7 +47,7 @@ const Gallery: React.FC<IProps> = ({ setHeader, setReload }) => {
 
     useEffect(() => {
         if(imgs) {
-            const paths = imgs.map((i: any) => i.fullpath)
+            const paths = imgs.map((i: { fullpath: string }) => i.fullpath)
             try {
                 filterImgs(paths)
             } catch(err) {
@@ -61,7 +61,7 @@ const Gallery: React.FC<IProps> = ({ setHeader, setReload }) => {
         if(paths.length == 0) { setNoImgs(true) }
             let image: any
                 const unfiltered = await Promise.allSettled(
-                    paths.map(async(path: any) => {
+                    paths.map(async(path: string) => {
                             image = await Promise.allSettled([
                                 await axios({
                                     method: 'get',
@@ -83,13 +83,13 @@ const Gallery: React.FC<IProps> = ({ setHeader, setReload }) => {
                     
 
                       // zorad podla casu vytvorenia
-                    imgs.sort((a: any,b: any) => {
+                    imgs.sort((a: { modified: string},b: { modified: string}) => {
                         return new Date(b.modified).valueOf() - new Date(a.modified).valueOf()
                     })
 
 
                     
-                    imgs.map((img: any) => {
+                    imgs.map((img: { fullpath: string, name: string, path: string}) => {
                         return filtered.map((fil: any) => {
                             if(img.fullpath === fil.value.path) {
                                 setFilteredImgs((prev: any) => prev.concat(
@@ -122,7 +122,7 @@ const Gallery: React.FC<IProps> = ({ setHeader, setReload }) => {
     const handleShowPic = (i:{src:string, path: string, name: string}) => {
         showOverlay()
         setDisplayedImg(i.src)
-        const idx = filteredImgs.findIndex((el: any) => el.path === i.path)
+        const idx = filteredImgs.findIndex((el: {path: string}) => el.path === i.path)
         setImgIdx(idx)
         setPicActive(true)
     }
@@ -163,7 +163,7 @@ const Gallery: React.FC<IProps> = ({ setHeader, setReload }) => {
 
     // zmaz galeriu
     const handleDeleteGallery = async() => {
-        const confirmation: any = window.confirm(`Naozaj chcete zmazať galériu ${slug}?`)
+        const confirmation: boolean = window.confirm(`Naozaj chcete zmazať galériu ${slug}?`)
         if(confirmation) {
             const res = await axios.delete(`http://api.programator.sk/gallery/${slug}`)
             if(res.status === 200) {
