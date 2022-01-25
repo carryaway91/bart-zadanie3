@@ -1,9 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import GallerySelector from "../../components/gallerySelector/GallerySelector";
-import { Container, Page } from "./GalleryListStyles";
-import Add from "../../img/icons/add.png";
+import { Page } from "./GalleryListStyles";
 import { GalleryContext } from "../../context/galleryContext";
-import Selection from "../../components/selection/Selection";
 import { apiClient } from "../../apiClient/apiClient";
 import PaginationBar from "../../components/paginationBar/PaginationBar";
 import Loader from "../../components/UI/loader/Loader";
@@ -12,6 +10,7 @@ import {
   pushToGallery,
   sortByImgAndModifiedProp,
 } from "../../util/galleryList/GalleryListUtils";
+import CategoryPage from "../../components/categoryPage/CategoryPage";
 
 interface IProps {
   setLoaded: (arr: IMGInterface) => void;
@@ -187,45 +186,12 @@ const GalleryList: React.FC<IProps> = ({
             paginatedArray={paginatedArray}
           />
 
-          <Container>
-            {
-              <GallerySelector
-                isGallery={false}
-                image={Add}
-                openSelection={handleShowSelection}
-                h="246px"
-              />
-            }
-            {paginatedPage &&
-              paginatedPage.map(
-                (
-                  i: {
-                    path: string;
-                    image?: {
-                      path: string;
-                      fullpath: string;
-                      name: string;
-                      modified: string;
-                    };
-                    name: string;
-                    img: string;
-                  },
-                  idx: number
-                ) => (
-                  <GallerySelector
-                    isGallery={true}
-                    key={idx}
-                    image={i.img}
-                    header={i.name}
-                    link={i.path}
-                    h="246px"
-                  />
-                )
-              )}
-            {showSelection && (
-              <Selection close={() => setShowSelection(false)} />
-            )}
-          </Container>
+          <CategoryPage
+            handleShowSelection={handleShowSelection}
+            paginatedPage={paginatedPage}
+            showSelection={showSelection}
+            setShowSelection={(b: boolean) => setShowSelection(b)}
+          />
         </React.Fragment>
       ) : (
         <Loader />
