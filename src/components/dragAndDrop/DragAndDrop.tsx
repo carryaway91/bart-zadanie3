@@ -1,6 +1,6 @@
-import axios from "axios"
 import React, { useState } from "react"
 import Dropzone from "react-dropzone"
+import { apiUpload } from "../../apiClient/apiClient"
 import Button from "../UI/button/Button"
 import Loader from "../UI/loader/Loader"
 import { Container, Error, Preview, PreviewList, Zone } from "./DragAndDropStyles"
@@ -24,15 +24,7 @@ const DragAndDrop: React.FC<IProps> = ({ slug, setReload }) => {
             image.append('image', pic )
         }
             try {
-                const res = await axios({
-                    method: 'post',
-                    baseURL: `http://api.programator.sk/gallery/${slug}`,
-                    headers: {
-                        'Content-Type': 'multipart/form-data; boundary=--boundary'
-                    },
-                    data: image
-                })
-
+                const res = await apiUpload.post(`/gallery/${slug}`, image )
                 setReload({
                     name: res.data.uploaded[0].name,
                     path: res.data.uploaded[0].path,
