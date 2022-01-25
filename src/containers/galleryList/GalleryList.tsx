@@ -1,5 +1,4 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import GallerySelector from "../../components/gallerySelector/GallerySelector";
 import { Page } from "./GalleryListStyles";
 import { GalleryContext } from "../../context/galleryContext";
 import { apiClient } from "../../apiClient/apiClient";
