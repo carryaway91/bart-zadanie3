@@ -85,7 +85,9 @@ const DragAndDrop: React.FC<IProps> = ({ slug, setReload }) => {
         </h4>
         <div>
           {picsToUpload.length > 0 &&
-            picsToUpload.map((i) => <Preview src={URL.createObjectURL(i)} />)}
+            picsToUpload.map((i, idx) => (
+              <Preview src={URL.createObjectURL(i)} key={idx} />
+            ))}
         </div>
       </PreviewList>
     </Container>
