@@ -40,7 +40,7 @@ export const Categories = styled.h3`
     margin-bottom: 1.5rem;
 `
 
-export const Overlay = styled.div<{onClick: () => void}>`
+export const Overlay = styled.div`
     position: absolute;
     top: 0;
     bottom: 0;

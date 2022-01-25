@@ -1,26 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import { Container } from './NotificationStyles'
+import React, { useEffect, useState } from "react";
+import { Container } from "./NotificationStyles";
 
 interface IProps {
-    message: string
+  message: string;
 }
 
 const Notification: React.FC<IProps> = ({ message }) => {
-    const [show, setShow] = useState(true)
+  const [show, setShow] = useState(true);
 
-    useEffect(() => {
-        setTimeout(() => {
-            setShow(false)
-        }, 2000)
-    },[])
+  useEffect(() => {
+    setTimeout(() => {
+      setShow(false);
+    }, 2000);
+  }, []);
 
+  return (
+    <Container show={show}>
+      <p>{message}</p>
+    </Container>
+  );
+};
 
-    
-    return (
-        <Container show={show}>
-            <p>{ message }</p>
-        </Container>
-    )
-}
-
-export default Notification
+export default Notification;
