@@ -13,6 +13,9 @@ const Notification: React.FC<IProps> = ({ message }) => {
             setShow(false)
         }, 2000)
     },[])
+
+
+    
     return (
         <Container show={show}>
             <p>{ message }</p>

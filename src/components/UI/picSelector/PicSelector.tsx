@@ -5,7 +5,7 @@ interface IProps {
     right?: number,
     left?: number,
     bg: string,
-    onClick: () => void
+    onClick: () => void,
 }
 const PicSelector: React.FC<IProps> = (props) => {
     const { top, left, right, bg, onClick } = props

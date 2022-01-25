@@ -22,11 +22,16 @@ export const Container = styled.div`
         flex-direction: column;
         align-items: center
     }
+
+    .header-loader-container {
+        display: flex
+    }
 `
 
 export const Header = styled.h2`
     font-size: 36px;
     margin-top: 0;
+    margin-right: 1rem
 `
 
 export const Categories = styled.h3`

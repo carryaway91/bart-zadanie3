@@ -13,7 +13,7 @@ export const Container = styled.li`
 
 export const Thumbnail = styled.div<{img?: string}>`
     position: relative;    
-    width: 140%;
+    width: 100%;
     height: 12rem;
     background-image: url("${props => props.img}");
     background-position: center;

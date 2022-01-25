@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { Container, Fill, Numbers, PageSelector } from "./PaginationBarStyles"
+import Left from '../../img/icons/double-left.png'
+import Right from '../../img/icons/double-right.png'
+
 
 interface IProps {
     perPage: number,
@@ -10,8 +13,7 @@ interface IProps {
 
 const PaginationBar: React.FC<IProps> = ({perPage, page, setPage, paginatedArray}) => {
     useEffect(() => {
-        const f = JSON.parse(localStorage.getItem('page') || '0')
-
+        JSON.parse(localStorage.getItem('page') || '0')
         setFrom(page - (page % perPage))
         setTo(page - (page % perPage) + perPage)
     }, [])
@@ -27,8 +29,10 @@ const PaginationBar: React.FC<IProps> = ({perPage, page, setPage, paginatedArray
     const handlePrevFive = () => {
         setPage(from - perPage)
         setFrom(prev => prev - perPage)
-        setTo(prev => prev - perPage)
+        setTo(prev => prev - perPage)  
     }
+
+
 
 
     const handleSetPage = (idx: number) => {
@@ -43,12 +47,7 @@ const PaginationBar: React.FC<IProps> = ({perPage, page, setPage, paginatedArray
         <Container>
             {
                 page >= 5 ? <button onClick={() => handlePrevFive()}>
-                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" width="15" height="15"  x="0px" y="0px"
-                    viewBox="0 0 407.436 407.436" >
-                <polygon points="315.869,21.178 294.621,0 91.566,203.718 294.621,407.436 315.869,386.258 133.924,203.718 "/>
-
-                </svg>
-
+                    <img src={Left} alt='left arrows' width="20"/>
                 </button> : <Fill />
             }
             <Numbers>
@@ -58,10 +57,7 @@ const PaginationBar: React.FC<IProps> = ({perPage, page, setPage, paginatedArray
             </Numbers>
             {
                 to < paginatedArray.length ? <button onClick={() => handleNextFive()}>
-                    <svg width="15px" height="15px" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5 14L12 7.5L5 1" stroke="black" />
-                    </svg>
-
+                   <img src={Right} alt="right arrows" width="20" />
                 </button> : <Fill />
             }
         </Container>

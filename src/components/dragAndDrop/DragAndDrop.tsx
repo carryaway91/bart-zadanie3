@@ -19,7 +19,7 @@ const DragAndDrop: React.FC<IProps> = ({ slug, setReload }) => {
     const uploadPhoto = () => {
         setLoading(true)
         picsToUpload.forEach(async(pic) => {
-        const image = new FormData
+        const image = new FormData()
         if(picsToUpload !== undefined) {
             image.append('image', pic )
         }
@@ -66,12 +66,14 @@ const DragAndDrop: React.FC<IProps> = ({ slug, setReload }) => {
                         )}
                 </Dropzone>
                 { error && <Error>Nepodporovaný formát!</Error>}
-                <div style={{ marginBottom: '1rem'}}>
-                    {
-                        loading && <Loader />
-                    }
+                <div style={{ display: 'flex'}}>
+                    <Button bg="#000" color="#fff" disabled={picsToUpload.length === 0} onClick={uploadPhoto}>Nahrať obrázky</Button>
+                    <div style={{ marginBottom: '1rem'}}>
+                        {
+                            loading && <Loader />
+                        }
+                    </div>
                 </div>
-                <Button bg="#000" color="#fff" disabled={picsToUpload.length === 0} onClick={uploadPhoto}>Nahrať obrázky</Button>
             </div>
             <PreviewList>
                     <h4>{ picsToUpload.length === 0 ? 'Nie sú vybrané žiadne obrázky' : 'Obrázky na nahratie:'  }</h4>

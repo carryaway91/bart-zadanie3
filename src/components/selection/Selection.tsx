@@ -36,9 +36,7 @@ const Selection: React.FC<IProps> = ({ close }) => {
 
     const handleSubmitForm = async() => {
         try {
-            const res = await apiClient.post('/gallery', { 
-                name: inputName
-            })
+            const res: any = await apiClient.post('/gallery', { name: inputName })
             if(res.status === 201) {
                 setRedirectTo(res.data.path)
                 closeOverlay()
