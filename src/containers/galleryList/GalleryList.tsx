@@ -60,50 +60,46 @@ const GalleryList: React.FC<IProps> = ({ setLoaded, loaded, reload, cancelReload
         if(!overlay) {
             setShowSelection(false)
           }
-      }, [overlay])
+      }, [overlay, setShowSelection])
 
     
-    useEffect(() => {
-        if(galleryImgs.length > 0)
-          addPicsToGalleries(imgs, galleryImgs)
-      },[galleryImgs])
       
-    // vyfiltruj galerie s image property
-    const filterImgs = useCallback(async(paths: []) => {
+      // vyfiltruj galerie s image property
+      const filterImgs = useCallback(async(paths: []) => {
         const unfiltered = await getImagesForGalleryList(paths)
         const filtered = unfiltered.filter(p => p.status !== 'rejected')
-          setGalleryImgs(filtered)
-          if(reload) { cancelReload() }
-    }, [])
-
-
-
-
-
-    // api na gallery endpoint a vyfiltrovanie responsu
-    const setGalleries = useCallback(async() => {
-      const res: any = await apiClient.get('/gallery')
-      let galleries = res.data.galleries
-      const imgsPaths = galleries.filter((p: { image: {}}) => p.image) 
-      filterImgs(imgsPaths)
-      setImgs(res.data.galleries) 
-  }, [filterImgs]) 
-    
-
-
-
-  useEffect(() => {
-
-    /* zavolaj api na /gallery len ked este nebola prvotne nacitana
+        setGalleryImgs(filtered)
+        if(reload) { cancelReload() }
+      }, [cancelReload, reload])
+      
+      
+      
+      
+      
+      // api na gallery endpoint a vyfiltrovanie responsu
+      const setGalleries = useCallback(async() => {
+        const res: any = await apiClient.get('/gallery')
+        let galleries = res.data.galleries
+        const imgsPaths = galleries.filter((p: { image: {}}) => p.image) 
+        filterImgs(imgsPaths)
+        setImgs(res.data.galleries) 
+      }, [filterImgs]) 
+      
+      
+      
+      
+      useEffect(() => {
+        
+        /* zavolaj api na /gallery len ked este nebola prvotne nacitana
       inak nacitaj z uloziska
-    */
-    if(loaded.length === 0) {
-      setGalleries()
-    } else {
+      */
+     if(loaded.length === 0) {
+       setGalleries()
+      } else {
       setPaginatedArray(loaded)
     }
   }, [loaded, setGalleries])
-
+  
   // po zmazani galerie znovu nacitaj api
   useEffect(() => {
     if(reload) {
@@ -111,40 +107,45 @@ const GalleryList: React.FC<IProps> = ({ setLoaded, loaded, reload, cancelReload
     }
   }, [reload, setGalleries])
 
-
-
-
-      // ukaz komponent s formularom na novu galeriu
-      const handleShowSelection = () => {
-          setShowSelection(true)
-          showOverlay()
+  
+  
+  
+  // ukaz komponent s formularom na novu galeriu
+  const handleShowSelection = () => {
+    setShowSelection(true)
+    showOverlay()
+  }
+  
+  
+  // urob paginaciu
+  const paginate = useCallback((arr: IMGInterface[]) => {
+    if( paginatedArray.length > 0) { return }
+    let paginated: any = []
+    
+    for(let i = 0; i < arr.length; i) {
+      if(arr.length >= 5) {
+        paginated.push(arr.splice(i, 5))
+      } else {
+        paginated.push(arr.splice(i, arr.length))
       }
-
-
-
-
+    } 
+    setLoaded(paginated)
+    setPaginatedArray(paginated)
+  }, [setLoaded, paginatedArray])
+  
+  
   // prirad img property do vyfiltrovaneho pola
-  const addPicsToGalleries = (arrOfPics: IMGInterface[], filteredPics: { value: { path: string, image: {} }}[]) => {
+  const addPicsToGalleries = useCallback((arrOfPics: IMGInterface[], filteredPics: { value: { path: string, image: {} }}[]) => {
     const newArray = pushToGallery(arrOfPics, filteredPics)
     const filteredArray = filterArray(newArray)
-      paginate(filteredArray)
-    }
-
-    // urob paginaciu
-    const paginate = (arr: IMGInterface[]) => {
-        let paginated: any = []
-
-      for(let i = 0; i < arr.length; i) {
-          if(arr.length >= 5) {
-              paginated.push(arr.splice(i, 5))
-            } else {
-                paginated.push(arr.splice(i, arr.length))
-            }
-        } 
-        setLoaded(paginated)
-        setPaginatedArray(paginated)
-    }
-
+    paginate(filteredArray)
+  }, [paginate])
+  
+  useEffect(() => {
+      if(galleryImgs.length > 0)
+        addPicsToGalleries(imgs, galleryImgs)
+    },[galleryImgs, addPicsToGalleries, imgs])
+  
   // vyfiltruj duplikaty z pola
   const filterArray = (arr: IMGInterface[]) => {
     let filteredArr = arr.reduce((acc: any[], current: { name: string }) => {

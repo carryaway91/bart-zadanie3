@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React from "react"
 import { Link } from "react-router-dom"
 import { Add, Container, Description, NoImg, Thumbnail } from "./GallerySelectorStyles"
 import NoImage from '../../img/no-image.png'
@@ -34,7 +34,7 @@ const GallerySelector: React.FC<IProps> = ({ image, header, link, isGallery, h, 
                 )
                 :
                 <Add onClick={openSelection} h={h}>
-                    <img src={image} />
+                    <img src={image} alt="add" />
                     <p>Pridať kategóriu</p>
                 </Add>
             }

@@ -7,7 +7,7 @@ import { Container, Error, Preview, PreviewList, Zone } from "./DragAndDropStyle
 
 interface IProps {
     slug: string,
-    setReload: ({}) => void
+    setReload: (obj: {}) => void
 }
 
 

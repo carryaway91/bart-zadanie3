@@ -16,7 +16,7 @@ const PaginationBar: React.FC<IProps> = ({perPage, page, setPage, paginatedArray
         JSON.parse(localStorage.getItem('page') || '0')
         setFrom(page - (page % perPage))
         setTo(page - (page % perPage) + perPage)
-    }, [])
+    }, [page, perPage])
 
     const [from, setFrom] = useState(0)
     const [to, setTo] = useState(perPage)

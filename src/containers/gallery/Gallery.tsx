@@ -43,6 +43,7 @@ const Gallery: React.FC<IProps> = ({ setHeader, setReload }) => {
     const { slug } = useParams<IParams>()
     
     const getGalleryPics = useCallback(async() => {
+        if( imgs ) { return }
             try {
                 const res: any = await apiClient.get(`/gallery/${slug}`)
                 setImgs(res.data.images)
@@ -53,7 +54,7 @@ const Gallery: React.FC<IProps> = ({ setHeader, setReload }) => {
                     setRedNotFound(true)
                 }
             }
-    }, [])  
+    }, [imgs, setHeader, slug])  
 
     useEffect(() => {
         getGalleryPics()
@@ -105,7 +106,7 @@ const Gallery: React.FC<IProps> = ({ setHeader, setReload }) => {
     
     
     // ukaz kliknuty obrazok
-    const handleShowPic = async(i:{src:string, path: string, name: string}) => {
+    const handleShowPic = useCallback(async(i:{src:string, path: string, name: string}) => {
         showOverlay()
         
         setImageLoading(true)
@@ -116,7 +117,7 @@ const Gallery: React.FC<IProps> = ({ setHeader, setReload }) => {
         const idx = filteredImgs.findIndex((el: {src: string ,path: string}) => el.src === i.src)
         setImgIdx(idx)
         setPicActive(true)
-    }
+    }, [filteredImgs, galleryName, showOverlay])
     
     
     // zatvor selectnuty obrazok
@@ -128,7 +129,7 @@ const Gallery: React.FC<IProps> = ({ setHeader, setReload }) => {
     
     
     // dalsi obrazok
-    const handleNextPic = () => {
+    const handleNextPic = useCallback(() => {
         if(imgIdx !== undefined && imgIdx < filteredImgs.length - 1) {
             if(!imageLoading) {
                 setImgIdx(prev => prev + 1)
@@ -140,11 +141,11 @@ const Gallery: React.FC<IProps> = ({ setHeader, setReload }) => {
                 handleShowPic(filteredImgs[0])
             }
         }
-    }
+    }, [imgIdx, imageLoading, filteredImgs, handleShowPic])
     
     
     // predosly obrazok
-    const handlePrevPic = () => {
+    const handlePrevPic = useCallback(() => {
         if(imgIdx !== undefined && imgIdx > 0) {
             if(!imageLoading) {
                 setImgIdx(prev => prev && prev - 1)
@@ -156,7 +157,7 @@ const Gallery: React.FC<IProps> = ({ setHeader, setReload }) => {
                 handleShowPic(filteredImgs[filteredImgs.length - 1])
             }
         }
-    }
+    }, [imgIdx, imageLoading, filteredImgs, handleShowPic ])
 
 
     useEffect(() => {
@@ -172,7 +173,7 @@ const Gallery: React.FC<IProps> = ({ setHeader, setReload }) => {
         return () => {
             window.removeEventListener('keydown', handlePressNext)
         }
-    }, [handleNextPic])
+    }, [handleNextPic, handlePrevPic])
 
     const handleClose = () => {
         closeOverlay()
